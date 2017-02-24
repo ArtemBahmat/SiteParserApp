@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SiteParserCore</RootNamespace>
     <AssemblyName>SiteParserCore</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,6 +48,10 @@
       <HintPath>..\packages\NLog.4.4.2\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="nunit.framework, Version=3.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.6.0\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="SqlBulkTools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -58,8 +64,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -80,6 +88,7 @@
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\UrlHelper.cs" />
     <Compile Include="Interfaces\IParserManager.cs" />
+    <Compile Include="Interfaces\IRepository2.cs" />
     <Compile Include="Interfaces\ITreeBuilder.cs" />
     <Compile Include="Models\ParserContext.cs" />
     <Compile Include="Models\Resource.cs" />
@@ -90,6 +99,11 @@
     <Compile Include="BusinessLogic\ParserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BusinessLogic\TreeViewBuilder.cs" />
+    <Compile Include="Repository\Entity.cs" />
+    <Compile Include="Repository\Repository2.cs" />
+    <Compile Include="Repository\ResourcesRepository.cs" />
+    <Compile Include="Repository\SitesRepository.cs" />
+    <Compile Include="Repository\UrlsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NLog.config">
@@ -99,6 +113,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

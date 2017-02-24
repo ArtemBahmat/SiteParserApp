@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiteParserCore", "SiteParse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiteParserGUI", "SiteParser\SiteParserGUI.csproj", "{5A1141D4-2305-4BCB-816B-F4AF48881AE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserTests", "ParserTests\ParserTests.csproj", "{070E6FB9-4ACE-4F35-9050-E269FA8D1624}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5A1141D4-2305-4BCB-816B-F4AF48881AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A1141D4-2305-4BCB-816B-F4AF48881AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A1141D4-2305-4BCB-816B-F4AF48881AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{070E6FB9-4ACE-4F35-9050-E269FA8D1624}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{070E6FB9-4ACE-4F35-9050-E269FA8D1624}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{070E6FB9-4ACE-4F35-9050-E269FA8D1624}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{070E6FB9-4ACE-4F35-9050-E269FA8D1624}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

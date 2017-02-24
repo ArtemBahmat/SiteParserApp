@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using SiteParserCore.Models;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,7 +15,10 @@ namespace SiteParserCore.Interfaces
         Site Site { get; set; }
         int TotalUrlsCount { get; }
         int ParsedUrlsCount { get; }
-        HashSet<Url> Urls { get; }
+        HashSet<string> UrlNames { get; set; }
+        ConcurrentQueue<Url> UrlsQueue { get; set; }
+        ConcurrentBag<Url> ReadyUrls { get; set; }
+        ConcurrentBag<Resource> ReadyResources { get; set; }
         HashSet<Resource> Resources { get; }
         List<Task> Tasks { get; set; }
         HtmlWeb Web { get; set; }

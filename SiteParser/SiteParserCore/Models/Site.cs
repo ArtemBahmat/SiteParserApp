@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using SiteParserCore.Repository;
+using System.Collections.Generic;
 
 namespace SiteParserCore.Models
 {
-    public class Site
+    public class Site : Entity
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -10,7 +11,7 @@ namespace SiteParserCore.Models
         public int MaxNestingLevel { get; set; }
         public bool ToParseExternalLinks { get; set; }
 
-        public IEnumerable<Url> Urles { get; set; }
+        private IEnumerable<Url> Urles { get; set; }
         public Site()
         {
             Urles = new List<Url>();

@@ -1,18 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using SiteParserCore.Repository;
 
 namespace SiteParserCore.Models
 {
     public enum State
     {
         IsAwaiting,
-        IsInParsing,
-        IsParsed,
-        IsSaved,
         IsInTree
     }
 
-    public class Url : IEquatable<Url>
+    public class Url : Entity, IEquatable<Url>
     {
         public int Id { get; set; }
         public int SiteId { get; set; }
@@ -25,8 +23,6 @@ namespace SiteParserCore.Models
         public DateTime? DateTimeOfLastScan { get; set; }
         [NotMapped]
         public State State { get; set; }
-
-        public Url() { }
 
         public bool Equals(Url other)
         {

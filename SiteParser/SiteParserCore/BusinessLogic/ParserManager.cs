@@ -3,7 +3,6 @@ using SiteParserCore.Interfaces;
 using SiteParserCore.Models;
 using StructureMap;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace SiteParserCore.BusinessLogic
@@ -31,30 +30,30 @@ namespace SiteParserCore.BusinessLogic
             }
         }
         public IParser ParserInstance { get; set; }
-        public IRepository DBRepository { get; set; } 
+        private IRepository DbRepository { get; set; }
 
         public void Execute(string url, int maxThreadsCount, int nestingLevel, bool parseExternal)
         {
             Initialize(url, maxThreadsCount, nestingLevel, parseExternal);
-            bool isAlive = false;
 
-            if (ParserInstance != null && ParserInstance.Site != null)
+            if (ParserInstance?.Site != null)
             {
-                DBRepository.DeleteResources(ParserInstance.Site.Id);
+                DbRepository.DeleteResources(ParserInstance.Site.Id);
 
                 Thread AdditionalThread = new Thread(ParserInstance.Parse);
                 AdditionalThread.Start();
 
+                bool isAlive = false;
                 do
                 {
                     Thread.Sleep(1000);
                     isAlive = ParserInstance.IsAlive;
 
-                    List<Url> urls = GetUrlsToSave();
-                    DBRepository.SaveUrls(urls);
+                    IEnumerable<Url> urls = GetUrlsToSave();
+                    DbRepository.SaveUrls(urls);
 
-                    List<Resource> resources = GetResourcesToSave();
-                    DBRepository.SaveResources(resources);
+                    IEnumerable<Resource> resources = GetResourcesToSave();     
+                    DbRepository.SaveResources(resources);                    
 
                 } while (isAlive);
             }
@@ -66,8 +65,8 @@ namespace SiteParserCore.BusinessLogic
 
             if (!string.IsNullOrEmpty(url))
             {
-                DBRepository = container.GetInstance<IRepository>();
-                Site site = DBRepository.GetSite(url);
+                DbRepository = container.GetInstance<IRepository>();
+                Site site = DbRepository.GetSite(url);
 
                 if (site == null)
                 {
@@ -85,58 +84,33 @@ namespace SiteParserCore.BusinessLogic
 
         private Site CreateSite(string url)
         {
-            Site site = new Site() { Name = url, Threads = THREADS_COUNT, MaxNestingLevel = MAX_NESTING_LEVEL, ToParseExternalLinks = false }; 
-            DBRepository.SaveSite(site);
+            Site site = new Site() { Name = url, Threads = THREADS_COUNT, MaxNestingLevel = MAX_NESTING_LEVEL, ToParseExternalLinks = false };
+            DbRepository.SaveSite(site);
             return site;
         }
 
-        private List<Url> GetUrlsToSave()
+        private IEnumerable<Url> GetUrlsToSave()
         {
-            List<Url> result = null;
+            IEnumerable<Url> result = null;
 
-            lock (Parser._locker)
+            if (ParserInstance != null)
             {
-                if (ParserInstance != null)
-                {
-                    result = new List<Url>();
-
-                    IEnumerable<Url> notProcessedUrls = ParserInstance.Urls.Where(url => url.State == State.IsParsed).ToList();
-                    IEnumerable<Url> resultUrls = ParserInstance.Urls.Intersect(notProcessedUrls);
-
-                    foreach (var url in resultUrls)
-                    {
-                        url.State = State.IsSaved;
-                    }
-                                        
-                    result.AddRange(resultUrls);
-                }
-
-                return result;
+                result = ParserInstance.ReadyUrls.TryTakeAll();
             }
+
+            return result;
         }
 
-        private List<Resource> GetResourcesToSave()
+        private IEnumerable<Resource> GetResourcesToSave()
         {
-            List<Resource> result = null;
+            IEnumerable<Resource> result = null;
 
-            lock (Parser._locker)
+            if (ParserInstance != null)
             {
-                if (ParserInstance != null)
-                {
-                    result = new List<Resource>();
-
-                    IEnumerable<Resource> notProcessedRes = ParserInstance.Resources.Where(res => res.State == State.IsAwaiting).ToList();
-                    IEnumerable<Resource> resultRes = ParserInstance.Resources.Intersect(notProcessedRes);
-
-                    foreach (var res in resultRes)
-                    {
-                        res.State = State.IsSaved;
-                    }
-                    result.AddRange(resultRes);
-                }
-
-                return result;
+                result = ParserInstance.ReadyResources.TryTakeAll();
             }
+
+            return result;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace SiteParserCore.BusinessLogic
 {
     public class TreeViewBuilder : TreeBuilderBase
     {
-        public TreeView Tree { get; set; }
+        private TreeView Tree { get; }
         private int _itemsCount;
 
         public TreeViewBuilder(string baseUrl, int nestingLevel, bool getExternal, TreeView treeView) : base(baseUrl, nestingLevel, getExternal)
@@ -35,10 +35,8 @@ namespace SiteParserCore.BusinessLogic
 
             if (item == null)
             {
-                baseItem = new TreeViewItem();
-                baseItem.IsExpanded = true;
-                item = new TreeViewItem();
-                item.Header = parentUrl.Name;
+                baseItem = new TreeViewItem {IsExpanded = true};
+                item = new TreeViewItem {Header = parentUrl.Name};
                 baseItem.Items.Add(item);
                 _itemsCount++;
             }
@@ -49,17 +47,15 @@ namespace SiteParserCore.BusinessLogic
             foreach (var url in Urls.Where(u => u.State != State.IsInTree && u.ParentName == parentUrl.Name))
             {
                 _itemsCount++;
-                TreeViewItem nestedItem = new TreeViewItem();
-                nestedItem.Header = url.Name;
+                var nestedItem = new TreeViewItem {Header = url.Name};
                 item.Items.Add(nestedItem);
                 FillTree(true, url, nestedItem);
             }
 
-            if (!isRecursion)
-            {
-                baseItem.Header = $"{_itemsCount} urls";
-                Tree.Items.Add(baseItem);
-            }
+            if (isRecursion) return;
+            if (baseItem == null) return;
+            baseItem.Header = $"{_itemsCount} urls";
+            Tree.Items.Add(baseItem);
         }
     }
 }

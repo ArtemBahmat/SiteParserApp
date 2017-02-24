@@ -1,0 +1,1650 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SqlBulkTools</name>
+    </assembly>
+    <members>
+        <member name="T:SqlBulkTools.AbstractColumnSelection`1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.AbstractColumnSelection`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},System.String,SqlBulkTools.BulkCopySettings)">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+            <param name="tableName"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="schema"></param>
+            <param name="bulkCopySettings"></param>
+        </member>
+        <member name="M:SqlBulkTools.AbstractColumnSelection`1.BulkInsert">
+            <summary>
+            A bulk insert will attempt to insert all records. If you have any unique constraints on columns, these must be respected. 
+            Notes: (1) Only the columns configured (via AddColumn) will be evaluated. (3) Use AddAllColumns to add all columns in table. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.AbstractColumnSelection`1.BulkInsertOrUpdate">
+            <summary>
+            A bulk insert or update is also known as bulk upsert or merge. All matching rows from the source will be updated.
+            Any unique rows not found in target but exist in source will be added. Notes: (1) BulkInsertOrUpdate requires at least 
+            one MatchTargetOn property to be configured. (2) Only the columns configured (via AddColumn) 
+            will be evaluated. (3) Use AddAllColumns to add all columns in table.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.AbstractColumnSelection`1.BulkUpdate">
+            <summary>
+            A bulk update will attempt to update any matching records. Notes: (1) BulkUpdate requires at least one MatchTargetOn 
+            property to be configured. (2) Only the columns configured (via AddColumn) will be evaluated. (3) Use AddAllColumns to add all columns in table.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.AbstractColumnSelection`1.BulkDelete">
+            <summary>
+            A bulk delete will delete records when matched. Consider using a DTO with only the needed information (e.g. PK) Notes: 
+            (1) BulkUpdate requires at least one MatchTargetOn property to be configured.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.AbstractOperation`1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.AbstractOperation`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.String,System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},SqlBulkTools.BulkCopySettings)">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="bulkCopySettings"></param>
+        </member>
+        <member name="M:SqlBulkTools.AbstractOperation`1.SetIdentity(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            
+            </summary>
+            <param name="columnName"></param>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.AbstractOperation`1.GetParameterValue``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            
+            </summary>
+            <param name="parameterToCheck"></param>
+            <typeparam name="TParameter"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.AbstractOperation`1.SetIdentity(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlBulkTools.Enumeration.ColumnDirectionType)">
+            <summary>
+            
+            </summary>
+            <param name="columnName"></param>
+            <param name="outputIdentity"></param>
+        </member>
+        <member name="M:SqlBulkTools.AbstractOperation`1.SetCollation(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            
+            </summary>
+            <param name="columnName"></param>
+            <param name="collation"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.AbstractOperation`1.MatchTargetCheck">
+            <summary>
+            
+            </summary>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="T:SqlBulkTools.BulkCopySettings">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.BulkCopySettings.BulkCopyTimeout">
+            <summary>
+            Number of seconds for the operation to complete before it times out.
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.BulkCopySettings.EnableStreaming">
+            <summary>
+            Enables or disables a SqlBulkCopy object to stream data from an IDataReader object
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.BulkCopySettings.SqlBulkCopyOptions">
+            <summary>
+            You can use the SqlBulkCopyOptions enumeration when you construct a SqlBulkCopy instance to change how the WriteToServer methods for that instance behave.
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.BulkCopySettings.BatchSize">
+            <summary>
+            Number of rows in each batch. At the end of each batch, the rows in the batch are sent to the server.
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.BulkCopySettings.BulkCopyNotification">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SqlBulkTools.BulkCopyNotification">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.BulkCopyNotification.SqlRowsCopied">
+            <summary>
+            Occurs every time the number of rows defined by NotifyAfter has processed
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.BulkCopyNotification.NotifyAfter">
+            <summary>
+            Defines the number of rows to be processed before generating a notification event.
+            </summary>
+        </member>
+        <member name="T:SqlBulkTools.Core.BulkOperationsUtility">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.Core.BulkOperationsUtility.GetSqlTypeFromDotNetType(System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException"></exception>
+        </member>
+        <member name="T:SqlBulkTools.IBulkOperations">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.IBulkOperations.Setup">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.IBulkOperations.Setup``1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.DeleteQueryCondition`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryCondition`1.#ctor(System.String,System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="sqlTimeout"></param>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryCondition`1.Where(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Specify a condition.
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryCondition`1.Where(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.String)">
+            <summary>
+            Specify a condition.
+            </summary>
+            <param name="expression"></param>
+            <param name="collation">Only explicitly set the collation if there is a collation conflict.</param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="T:SqlBulkTools.DeleteQueryReady`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryReady`1.#ctor(System.String,System.String,System.Int32,System.Collections.Generic.List{SqlBulkTools.PredicateCondition},System.Collections.Generic.List{System.Data.SqlClient.SqlParameter},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            
+            </summary>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="conditionSortOrder"></param>
+            <param name="whereConditions"></param>
+            <param name="parameters"></param>
+            <param name="collationColumnDic"></param>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryReady`1.And(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Specify an additional condition to match on.
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryReady`1.And(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.String)">
+            <summary>
+            Specify an additional condition to match on.
+            </summary>
+            <param name="expression">Only explicitly set the collation if there is a collation conflict.</param>
+            <param name="collation"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException">Only explicitly set the collation if there is a collation conflict.</exception>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryReady`1.Or(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Specify an additional condition to match on.
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryReady`1.Or(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.String)">
+            <summary>
+            Specify an additional condition to match on.
+            </summary>
+            <param name="expression"></param>
+            <param name="collation">Only explicitly set the collation if there is a collation conflict.</param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryReady`1.SetBatchQuantity(System.Int32)">
+            <summary>
+            The maximum number of records to delete per transaction.
+            </summary>
+            <param name="batchQuantity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryReady`1.Commit(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryReady`1.CommitAsync(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database asynchronously. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.DeleteQueryTable`1">
+            <summary>
+            Configurable options for table. 
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryTable`1.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="tableName"></param>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryTable`1.Delete">
+            <summary>
+            All rows matching the condition(s) selected will be deleted. If you need to delete a collection of objects that can't be
+            matched by a generic condition, use the BulkDelete method instead. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryTable`1.WithSchema(System.String)">
+            <summary>
+            Explicitly set a schema. If a schema is not added, the system default schema name 'dbo' will used.
+            </summary>
+            <param name="schema"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQueryTable`1.WithSqlCommandTimeout(System.Int32)">
+            <summary>
+            Default is 600 seconds. See docs for more info. 
+            </summary>
+            <param name="seconds"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.DeleteQuery`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.DeleteQuery`1.WithTable(System.String)">
+            <summary>
+            Set the name of table for operation to take place. Registering a table is Required.
+            </summary>
+            <param name="tableName">Name of the table.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.QueryOperations.QueryInsertReady`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryInsertReady`1.#ctor(`0,System.String,System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.List{System.Data.SqlClient.SqlParameter})">
+            <summary>
+            
+            </summary>
+            <param name="singleEntity"></param>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="sqlParams"></param>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryInsertReady`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Sets the identity column for the table. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryInsertReady`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlBulkTools.Enumeration.ColumnDirectionType)">
+            <summary>
+            Sets the identity column for the table. 
+            </summary>
+            <param name="columnName"></param>
+            <param name="direction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryInsertReady`1.Commit(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.IdentityException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryInsertReady`1.CommitAsync(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database asynchronously. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.IdentityException"></exception>
+        </member>
+        <member name="T:SqlBulkTools.QueryOperations.QueryAddColumnList`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumnList`1.#ctor(`0,System.String,System.Collections.Generic.HashSet{System.String},System.String,System.Collections.Generic.List{System.Data.SqlClient.SqlParameter})">
+            <summary>
+            
+            </summary>
+            <param name="singleEntity"></param>
+            <param name="tableName"></param>
+            <param name="columns"></param>
+            <param name="schema"></param>
+            <param name="sqlParams"></param>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumnList`1.Insert">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumnList`1.Upsert">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumnList`1.Update">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumnList`1.RemoveColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Removes a column that you want to be excluded. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumnList`1.CustomColumnMapping(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            By default SqlBulkTools will attempt to match the model property names to SQL column names (case insensitive). 
+            If any of your model property names do not match 
+            the SQL table column(s) as defined in given table, then use this method to set up a custom mapping.  
+            </summary>
+            <param name="source">
+            The object member that has a different name in SQL table. 
+            </param>
+            <param name="destination">
+            The actual name of column as represented in SQL table. 
+            </param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.QueryOperations.QueryForObject`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryForObject`1.#ctor(`0,System.Collections.Generic.List{System.Data.SqlClient.SqlParameter})">
+            <summary>
+            
+            </summary>
+            <param name="entity"></param>
+            <param name="sqlParams"></param>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryForObject`1.WithTable(System.String)">
+            <summary>
+            Set the name of table for operation to take place. Registering a table is Required.
+            </summary>
+            <param name="tableName">Name of the table.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.QueryOperations.QueryTable`1">
+            <summary>
+            Configurable options for table. 
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryTable`1.#ctor(`0,System.String,System.Collections.Generic.List{System.Data.SqlClient.SqlParameter})">
+            <summary>
+            
+            </summary>
+            <param name="singleEntity"></param>
+            <param name="tableName"></param>
+            <param name="sqlParams"></param>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryTable`1.AddColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Add each column that you want to include in the query.
+            </summary>
+            <param name="columnName">Column name as represented in database</param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryTable`1.AddAllColumns">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryTable`1.WithSchema(System.String)">
+            <summary>
+            Explicitly set a schema. If a schema is not added, the system default schema name 'dbo' will used.
+            </summary>
+            <param name="schema"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.QueryOperations.QueryAddColumn`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumn`1.#ctor(`0,System.String,System.Collections.Generic.HashSet{System.String},System.String,System.Collections.Generic.List{System.Data.SqlClient.SqlParameter})">
+            <summary>
+            
+            </summary>
+            <param name="singleEntity"></param>
+            <param name="tableName"></param>
+            <param name="columns"></param>
+            <param name="schema"></param>
+            <param name="sqlParams"></param>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumn`1.AddColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Add each column that you want to include in the query. Only include the columns that are relevant to the 
+            procedure for best performance. 
+            </summary>
+            <param name="columnName">Column name as represented in database</param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumn`1.AddColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            Add each column that you want to include in the query. Only include the columns that are relevant to the 
+            procedure for best performance. 
+            </summary>
+            <param name="columnName">Column name as represented in database</param>
+            <param name="destination">The actual name of column as represented in SQL table. By default SqlBulkTools will attempt to match the model property names to SQL column names (case insensitive). 
+            If any of your model property names do not match 
+            the SQL table column(s) as defined in given table, then use this overload to set up a custom mapping. </param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumn`1.Insert">
+            <summary>
+            Inserts a single entity. This method uses a parameterized query. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumn`1.Upsert">
+            <summary>
+            Attempts to update the target entity (using the mandatory MatchTargetOn property). 
+            If the target entity doesn't exist, insert a new record. This method uses a parameterized query.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryOperations.QueryAddColumn`1.Update">
+            <summary>
+            All rows matching the condition(s) selected will be updated. If you need to update a collection of objects that can't be
+            matched by a generic condition, use the BulkUpdate method instead. This method uses a parameterized query. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.QueryUpdateReady`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateReady`1.#ctor(`0,System.String,System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},System.Int32,System.Collections.Generic.List{SqlBulkTools.PredicateCondition},System.Collections.Generic.List{System.Data.SqlClient.SqlParameter},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            
+            </summary>
+            <param name="singleEntity"></param>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="conditionSortOrder"></param>
+            <param name="whereConditions"></param>
+            <param name="sqlParams"></param>
+            <param name="collationColumnDic"></param>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateReady`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Sets the identity column for the table. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateReady`1.And(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Specify an additional condition to match on.
+            </summary>
+            <param name="expression">Only explicitly set the collation if there is a collation conflict.</param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateReady`1.And(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.String)">
+            <summary>
+            Specify an additional condition to match on.
+            </summary>
+            <param name="expression">Only explicitly set the collation if there is a collation conflict.</param>
+            <param name="collation"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException">Only explicitly set the collation if there is a collation conflict.</exception>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateReady`1.Or(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Specify an additional condition to match on.
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateReady`1.Or(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.String)">
+            <summary>
+            Specify an additional condition to match on.
+            </summary>
+            <param name="expression"></param>
+            <param name="collation">Only explicitly set the collation if there is a collation conflict.</param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateReady`1.SetBatchQuantity(System.Int32)">
+            <summary>
+            The maximum number of records to update per transaction.
+            </summary>
+            <param name="batchQuantity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateReady`1.Commit(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateReady`1.CommitAsync(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database asynchronously. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.QueryUpdateCondition`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateCondition`1.#ctor(`0,System.String,System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.List{System.Data.SqlClient.SqlParameter})">
+            <summary>
+            
+            </summary>
+            <param name="singleEntity"></param>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="sqlParams"></param>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateCondition`1.Where(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpdateCondition`1.Where(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.String)">
+            <summary>
+            Specify a condition.
+            </summary>
+            <param name="expression"></param>
+            <param name="collation">Only explicitly set the collation if there is a collation conflict.</param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="T:SqlBulkTools.QueryUpsertReady`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpsertReady`1.#ctor(`0,System.String,System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.List{System.Data.SqlClient.SqlParameter})">
+            <summary>
+            
+            </summary>
+            <param name="singleEntity"></param>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="sqlParams"></param>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpsertReady`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlBulkTools.Enumeration.ColumnDirectionType)">
+            <summary>
+            Sets the identity column for the table. 
+            </summary>
+            <param name="columnName"></param>
+            <param name="outputIdentity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpsertReady`1.ExcludeColumnFromUpdate(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Exclude a property from the update statement. Useful for when you want to include CreatedDate or Guid for inserts only. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpsertReady`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Sets the identity column for the table. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpsertReady`1.MatchTargetOn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            At least one MatchTargetOn is required for correct configuration. MatchTargetOn is the matching clause for evaluating 
+            each row in table. This is usally set to the unique identifier in the table (e.g. Id). Multiple MatchTargetOn members are allowed 
+            for matching composite relationships. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpsertReady`1.MatchTargetOn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            At least one MatchTargetOn is required for correct configuration. MatchTargetOn is the matching clause for evaluating 
+            each row in table. This is usally set to the unique identifier in the table (e.g. Id). Multiple MatchTargetOn members are allowed 
+            for matching composite relationships. 
+            </summary>
+            <param name="columnName"></param>
+            <param name="collation">Only explicitly set the collation if there is a collation conflict.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpsertReady`1.Commit(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="conn"></param>
+            <returns></returns>
+            <exception cref="T:System.NullReferenceException"></exception>
+            <exception cref="T:SqlBulkTools.IdentityException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.QueryUpsertReady`1.CommitAsync(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database asynchronously. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="conn"></param>
+            <returns></returns>
+            <exception cref="T:System.NullReferenceException"></exception>
+            <exception cref="T:SqlBulkTools.IdentityException"></exception>
+        </member>
+        <member name="T:SqlBulkTools.Enumeration.ColumnDirectionType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SqlBulkTools.Enumeration.ColumnDirectionType.Input">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SqlBulkTools.Enumeration.ColumnDirectionType.InputOutput">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SqlBulkTools.Enumeration.PredicateType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SqlBulkTools.Enumeration.PredicateType.Update">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SqlBulkTools.Enumeration.PredicateType.Delete">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SqlBulkTools.Enumeration.PredicateType.Where">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SqlBulkTools.Enumeration.PredicateType.And">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SqlBulkTools.Enumeration.PredicateType.Or">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SqlBulkTools.PredicateCondition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.PredicateCondition.LeftName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.PredicateCondition.CustomColumnMapping">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.PredicateCondition.Value">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.PredicateCondition.ValueType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.PredicateCondition.Expression">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.PredicateCondition.SortOrder">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SqlBulkTools.PredicateCondition.PredicateType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SqlBulkTools.BulkCopy.BulkTable`1">
+            <summary>
+            Configurable options for table. 
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.BulkCopy.BulkTable`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.String)">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+            <param name="tableName"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkCopy.BulkTable`1.AddColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Add each column that you want to include in the query. Only include the columns that are relevant to the procedure for best performance. 
+            </summary>
+            <param name="columnName">Column name as represented in database</param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkCopy.BulkTable`1.AddColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            Add each column that you want to include in the query. Only include the columns that are relevant to the 
+            procedure for best performance. 
+            </summary>
+            <param name="columnName">Column name as represented in database</param>
+            <param name="destination">The actual name of column as represented in SQL table. By default SqlBulkTools will attempt to match the model property names to SQL column names (case insensitive). 
+            If any of your model property names do not match 
+            the SQL table column(s) as defined in given table, then use this overload to set up a custom mapping. </param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkCopy.BulkTable`1.AddAllColumns">
+            <summary>
+            Adds all properties in model that are either value, string, char[] or byte[] type. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkCopy.BulkTable`1.WithSchema(System.String)">
+            <summary>
+            Explicitly set a schema. If a schema is not added, the system default schema name 'dbo' will used.
+            </summary>
+            <param name="schema"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkCopy.BulkTable`1.WithBulkCopySettings(SqlBulkTools.BulkCopySettings)">
+            <summary>
+            
+            </summary>
+            <param name="settings"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.DataTableAbstractColumnSelect`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.DataTableAbstractColumnSelect`1.#ctor(SqlBulkTools.DataTableOperations,System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.HashSet{System.String})">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SqlBulkTools.DataTableOperations">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.DataTableOperations.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.DataTableOperations.SetupDataTable``1">
+            <summary>
+            Entry point for setting up a DataTable. Each transaction requires a valid setup. 
+            A valid setup is one that ends with the last call being PrepareDataTable. Examples available at. https://github.com/gtaylor44/SqlBulkTools 
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.DataTableOperations.BuildPreparedDataDable">
+            <summary>
+            Builds a prepared DataTable. PrepareDataTable must be called during Setup for this operation to work. 
+            See documentation for examples. https://github.com/gtaylor44/SqlBulkTools 
+            </summary>
+            <returns>Populated DataTable</returns>
+        </member>
+        <member name="M:SqlBulkTools.DataTableOperations.GetColumn``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Returns a column that has been added during SetupDataTable. Any custom column mappings adding during setup are applied. 
+            Notes: (1) Setup must use PrepareDataTable before calling this method. GetColumn will fail without a valid Setup. 
+            (2) Generics... Type must be of the same type used during setup. 
+            Refer to documentation for examples. https://github.com/gtaylor44/SqlBulkTools 
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.DataTableAllColumnSelect`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.DataTableAllColumnSelect`1.#ctor(SqlBulkTools.DataTableOperations,System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.HashSet{System.String})">
+            <summary>
+            
+            </summary>
+            <param name="ext"></param>
+            <param name="list"></param>
+            <param name="columns"></param>
+        </member>
+        <member name="M:SqlBulkTools.DataTableAllColumnSelect`1.CustomColumnMapping(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            If a column name in your model does not match the designated column name in the actual SQL table, 
+            you can add a custom column mapping.   
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.DataTableAllColumnSelect`1.RemoveColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Removes a column that you want to be excluded from the data table. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.DataTableAllColumnSelect`1.PrepareDataTable">
+            <summary>
+            Returns a data table to be used in a stored procedure. 
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="T:SqlBulkTools.BulkAddColumnList`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.BulkAddColumnList`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},System.String,SqlBulkTools.BulkCopySettings)">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+            <param name="tableName"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="schema"></param>
+            <param name="bulkCopySettings"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkAddColumnList`1.CustomColumnMapping(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            By default SqlBulkTools will attempt to match the model property names to SQL column names (case insensitive). 
+            If any of your model property names do not match 
+            the SQL table column(s) as defined in given table, then use this method to set up a custom mapping.  
+            </summary>
+            <param name="source">
+            The object member that has a different name in SQL table. 
+            </param>
+            <param name="destination">
+            The actual name of column as represented in SQL table. 
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkAddColumnList`1.RemoveColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Removes a column that you want to be excluded. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="T:SqlBulkTools.BulkDelete`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.BulkDelete`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.String,System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},SqlBulkTools.BulkCopySettings)">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="bulkCopySettings"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkDelete`1.MatchTargetOn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            At least one MatchTargetOn is required for correct configuration. MatchTargetOn is the matching clause for evaluating 
+            each row in table. This is usally set to the unique identifier in the table (e.g. Id). Multiple MatchTargetOn members are allowed 
+            for matching composite relationships. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkDelete`1.MatchTargetOn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            At least one MatchTargetOn is required for correct configuration. MatchTargetOn is the matching clause for evaluating 
+            each row in table. This is usally set to the unique identifier in the table (e.g. Id). Multiple MatchTargetOn members are allowed 
+            for matching composite relationships. 
+            </summary>
+            <param name="columnName"></param>
+            <param name="collation">Only explicitly set the collation if there is a collation conflict.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkDelete`1.SetTableHint(System.String)">
+            <summary>
+            Sets the table hint to be used in the merge query. HOLDLOCk is the default that will be used if one is not set. 
+            </summary>
+            <param name="tableHint"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkDelete`1.DeleteWhen(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Only delete records when the target satisfies a speicific requirement. This is used in conjunction with MatchTargetOn.
+            See help docs for examples.  
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkDelete`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Sets the identity column for the table. Required if an Identity column exists in table and one of the two 
+            following conditions is met: (1) MatchTargetOn list contains an identity column (2) AddAllColumns is used in setup. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkDelete`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlBulkTools.Enumeration.ColumnDirectionType)">
+            <summary>
+            Sets the identity column for the table. Required if an Identity column exists in table and one of the two 
+            following conditions is met: (1) MatchTargetOn list contains an identity column (2) AddAllColumns is used in setup. 
+            </summary>
+            <param name="columnName"></param>
+            <param name="outputIdentity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkDelete`1.Commit(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkDelete`1.CommitAsync(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database asynchronously. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.BulkInsert`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsert`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.String,System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},SqlBulkTools.BulkCopySettings)">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="bulkCopySettings"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsert`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Sets the identity column for the table. Required if an Identity column exists in table and one of the two 
+            following conditions is met: (1) MatchTargetOn list contains an identity column (2) AddAllColumns is used in setup. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsert`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlBulkTools.Enumeration.ColumnDirectionType)">
+            <summary>
+            Sets the identity column for the table. Required if an Identity column exists in table and one of the two 
+            following conditions is met: (1) MatchTargetOn list contains an identity column (2) AddAllColumns is used in setup. 
+            </summary>
+            <param name="columnName"></param>
+            <param name="outputIdentity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsert`1.TmpDisableAllNonClusteredIndexes">
+            <summary>
+            Disables all Non-Clustered indexes on the table before the transaction and rebuilds after the 
+            transaction. This option should only be considered for very large operations.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsert`1.Commit(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsert`1.CommitAsync(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database asynchronously. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.BulkInsertOrUpdate`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.String,System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},SqlBulkTools.BulkCopySettings)">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="bulkCopySettings"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.MatchTargetOn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            At least one MatchTargetOn is required for correct configuration. MatchTargetOn is the matching clause for evaluating 
+            each row in table. This is usally set to the unique identifier in the table (e.g. Id). Multiple MatchTargetOn members are allowed 
+            for matching composite relationships. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.MatchTargetOn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            At least one MatchTargetOn is required for correct configuration. MatchTargetOn is the matching clause for evaluating 
+            each row in table. This is usally set to the unique identifier in the table (e.g. Id). Multiple MatchTargetOn members are allowed 
+            for matching composite relationships. 
+            </summary>
+            <param name="columnName"></param>
+            <param name="collation">Only explicitly set the collation if there is a collation conflict.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Sets the identity column for the table. Required if an Identity column exists in table and one of the two 
+            following conditions is met: (1) MatchTargetOn list contains an identity column (2) AddAllColumns is used in setup. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlBulkTools.Enumeration.ColumnDirectionType)">
+            <summary>
+            Sets the identity column for the table. Required if an Identity column exists in table and one of the two 
+            following conditions is met: (1) MatchTargetOn list contains an identity column (2) AddAllColumns is used in setup. 
+            </summary>
+            <param name="columnName"></param>
+            <param name="outputIdentity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.ExcludeColumnFromUpdate(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Exclude a property from the update statement. Useful for when you want to include CreatedDate or Guid for inserts only. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.DeleteWhen(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Only delete records when the target satisfies a speicific requirement. This is used in conjunction with MatchTargetOn.
+            See help docs for examples
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.SetTableHint(System.String)">
+            <summary>
+            Sets the table hint to be used in the merge query. HOLDLOCk is the default that will be used if one is not set. 
+            </summary>
+            <param name="tableHint"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.UpdateWhen(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Only update records when the target satisfies a speicific requirement. This is used in conjunction with MatchTargetOn.
+            See help docs for examples.  
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.DeleteWhenNotMatched(System.Boolean)">
+            <summary>
+            If a target record can't be matched to a source record, it's deleted. Notes: (1) This is false by default. (2) Use at your own risk.
+            </summary>
+            <param name="flag"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.Commit(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+            <exception cref="T:SqlBulkTools.IdentityException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.BulkInsertOrUpdate`1.CommitAsync(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database asynchronously. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+            <exception cref="T:SqlBulkTools.IdentityException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperationsHelper.BuildUpdateSet(System.Collections.Generic.HashSet{System.String},System.Collections.Generic.HashSet{System.String},System.String)">
+            <summary>
+            Specificially for UpdateQuery and DeleteQuery
+            </summary>
+            <param name="columns"></param>
+            <param name="excludeFromUpdate"></param>
+            <param name="identityColumn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperationsHelper.CheckForValidDataType(System.Type,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <param name="throwIfInvalid">
+            Set this to true if user is manually adding columns. If AddAllColumns is used, then this can be omitted. 
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperationsHelper.CheckForAdditionalColumns(System.Collections.Generic.HashSet{System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            If there are MatchOnColumns that don't exist in columns, add to columns.
+            </summary>
+            <param name="columns"></param>
+            <param name="matchOnColumns"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperationsHelper.SetSqlBulkCopySettings(System.Data.SqlClient.SqlBulkCopy,SqlBulkTools.BulkCopySettings)">
+            <summary>
+            Advanced Settings for SQLBulkCopy class. 
+            </summary>
+            <param name="bulkcopy"></param>
+            <param name="options"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperationsHelper.MapColumns(System.Data.SqlClient.SqlBulkCopy,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            This is used only for the BulkInsert method at this time.  
+            </summary>
+            <param name="bulkCopy"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperationsHelper.GetDatabaseSchema(System.Data.SqlClient.SqlConnection,System.String,System.String)">
+            <summary>
+            Gets schema information for a table. Used to get SQL type of property. 
+            </summary>
+            <param name="conn"></param>
+            <param name="schema"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperationsHelper.AddPredicate``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},SqlBulkTools.Enumeration.PredicateType,System.Collections.Generic.List{SqlBulkTools.PredicateCondition},System.Collections.Generic.List{System.Data.SqlClient.SqlParameter},System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="predicate"></param>
+            <param name="predicateType"></param>
+            <param name="predicateList"></param>
+            <param name="sqlParamsList"></param>
+            <param name="sortOrder"></param>
+            <param name="appendParam"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperationsHelper.GetPredicateMethodName(SqlBulkTools.Enumeration.PredicateType)">
+            <summary>
+            
+            </summary>
+            <param name="predicateType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperationsHelper.BuildCondition(System.String,System.String,System.Type,System.Linq.Expressions.ExpressionType,System.Collections.Generic.List{SqlBulkTools.PredicateCondition},System.Collections.Generic.List{System.Data.SqlClient.SqlParameter},SqlBulkTools.Enumeration.PredicateType,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="leftName"></param>
+            <param name="value"></param>
+            <param name="valueType"></param>
+            <param name="expressionType"></param>
+            <param name="predicateList"></param>
+            <param name="sqlParamsList"></param>
+            <param name="sortOrder"></param>
+            <param name="appendParam"></param>
+            <param name="predicateType"></param>
+        </member>
+        <member name="T:SqlBulkTools.BulkUpdate`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.BulkUpdate`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.String,System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},SqlBulkTools.BulkCopySettings)">
+            <summary>
+            Updates existing records in bulk. 
+            </summary>
+            <param name="list"></param>
+            <param name="tableName"></param>
+            <param name="schema"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="bulkCopySettings"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkUpdate`1.UpdateWhen(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Only update records when the target satisfies a speicific requirement. This is used in conjunction with MatchTargetOn.
+            See help docs for examples.  
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.SqlBulkToolsException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.BulkUpdate`1.MatchTargetOn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            At least one MatchTargetOn is required for correct configuration. MatchTargetOn is the matching clause for evaluating 
+            each row in table. This is usally set to the unique identifier in the table (e.g. Id). Multiple MatchTargetOn members are allowed 
+            for matching composite relationships. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkUpdate`1.MatchTargetOn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            At least one MatchTargetOn is required for correct configuration. MatchTargetOn is the matching clause for evaluating 
+            each row in table. This is usally set to the unique identifier in the table (e.g. Id). Multiple MatchTargetOn members are allowed 
+            for matching composite relationships. 
+            </summary>
+            <param name="columnName"></param>
+            <param name="collation">Only explicitly set the collation if there is a collation conflict.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkUpdate`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Sets the identity column for the table. Required if an Identity column exists in table and one of the two 
+            following conditions is met: (1) MatchTargetOn list contains an identity column (2) AddAllColumns is used in setup. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkUpdate`1.SetIdentityColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlBulkTools.Enumeration.ColumnDirectionType)">
+            <summary>
+            Sets the identity column for the table. Required if an Identity column exists in table and one of the two 
+            following conditions is met: (1) MatchTargetOn list contains an identity column (2) AddAllColumns is used in setup. 
+            </summary>
+            <param name="columnName"></param>
+            <param name="outputIdentity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkUpdate`1.SetTableHint(System.String)">
+            <summary>
+            Sets the table hint to be used in the merge query. HOLDLOCk is the default that will be used if one is not set. 
+            </summary>
+            <param name="tableHint"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkUpdate`1.Commit(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.IdentityException"></exception>
+        </member>
+        <member name="M:SqlBulkTools.BulkUpdate`1.CommitAsync(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Commits a transaction to database asynchronously. A valid setup must exist for the operation to be 
+            successful.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+            <exception cref="T:SqlBulkTools.IdentityException"></exception>
+        </member>
+        <member name="T:SqlBulkTools.DataTableSingularColumnSelect`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.DataTableSingularColumnSelect`1.#ctor(SqlBulkTools.DataTableOperations,System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.HashSet{System.String})">
+            <summary>
+            
+            </summary>
+            <param name="ext"></param>
+            <param name="list"></param>
+            <param name="columns"></param>
+        </member>
+        <member name="M:SqlBulkTools.DataTableSingularColumnSelect`1.AddColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Add each column that you want to include in the query. Only include the columns that are relevant to the 
+            procedure for best performance. 
+            </summary>
+            <param name="columnName">Column name as represented in database</param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.DataTableSingularColumnSelect`1.CustomColumnMapping(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            If a column name in your model does not match the designated column name in the actual SQL table, 
+            you can add a custom column mapping. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.DataTableSingularColumnSelect`1.PrepareDataTable">
+            <summary>
+            Returns a data table to be used in a stored procedure as table variable or temp table.
+            Make any neccessary changes before calling BuildPreparedDataTable
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.BulkAddColumn`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.BulkAddColumn`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.String,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,System.String},System.String,SqlBulkTools.BulkCopySettings)">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+            <param name="tableName"></param>
+            <param name="columns"></param>
+            <param name="customColumnMappings"></param>
+            <param name="schema"></param>
+            <param name="bulkCopySettings"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkAddColumn`1.AddColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Add each column that you want to include in the query. Only include the columns that are relevant to the 
+            procedure for best performance. 
+            </summary>
+            <param name="columnName">Column name as represented in database</param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkAddColumn`1.AddColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            Add each column that you want to include in the query. Only include the columns that are relevant to the 
+            procedure for best performance. 
+            </summary>
+            <param name="columnName">Column name as represented in database</param>
+            <param name="destination">The actual name of column as represented in SQL table. By default SqlBulkTools will attempt to match the model property names to SQL column names (case insensitive). 
+            If any of your model property names do not match 
+            the SQL table column(s) as defined in given table, then use this overload to set up a custom mapping. </param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.DataTableColumns`1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.DataTableColumns`1.#ctor(System.Collections.Generic.IEnumerable{`0},SqlBulkTools.DataTableOperations)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.DataTableColumns`1.AddColumn(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Add each column that you want to include in the DataTable manually. 
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.DataTableColumns`1.AddAllColumns">
+            <summary>
+            Adds all properties in model that are either value, string, char[] or byte[] type. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.IDataTableOperations">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.IDataTableOperations.SetupDataTable``1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.IDataTableOperations.BuildPreparedDataDable">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.IDataTableTransaction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.IDataTableTransaction.BuildDataTable">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.SetupDataTable`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.SetupDataTable`1.#ctor(SqlBulkTools.DataTableOperations)">
+            <summary>
+            
+            </summary>
+            <param name="ext"></param>
+        </member>
+        <member name="M:SqlBulkTools.SetupDataTable`1.ForCollection(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Supply the collection that you want a DataTable generated for.
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.Setup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.Setup.#ctor(SqlBulkTools.BulkOperations)">
+            <summary>
+            
+            </summary>
+            <param name="ext"></param>
+        </member>
+        <member name="M:SqlBulkTools.Setup.ForCollection``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Represents the collection of objects to be inserted/upserted/updated/deleted (configured in next steps). 
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.Setup`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.Setup`1.#ctor(SqlBulkTools.BulkOperations)">
+            <summary>
+            
+            </summary>
+            <param name="ext"></param>
+        </member>
+        <member name="M:SqlBulkTools.Setup`1.ForDeleteQuery">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.Setup`1.ForCollection(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Represents the collection of objects to be inserted/upserted/updated/deleted (configured in next steps). 
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.Setup`1.ForObject(`0)">
+            <summary>
+            
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.BulkOperations">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperations.Setup``1">
+            <summary>
+            Each transaction requires a valid setup. Examples available at: https://github.com/gtaylor44/SqlBulkTools 
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:SqlBulkTools.BulkOperations.Setup">
+            <summary>
+            Each transaction requires a valid setup. Examples available at: https://github.com/gtaylor44/SqlBulkTools 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SqlBulkTools.BulkForCollection`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SqlBulkTools.BulkForCollection`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+        </member>
+        <member name="M:SqlBulkTools.BulkForCollection`1.WithTable(System.String)">
+            <summary>
+            Set the name of table for operation to take place. Registering a table is Required.
+            </summary>
+            <param name="tableName">Name of the table.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

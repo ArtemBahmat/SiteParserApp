@@ -87,7 +87,7 @@ namespace SiteParser
 
         private void timerTick(object sender, EventArgs e)
         {
-            if (_parserManagerInstance != null && _parserManagerInstance.ParserInstance != null)
+            if (_parserManagerInstance?.ParserInstance != null)
             {
                 if (_parserManagerInstance.ParserInstance.IsAlive)
                 {
@@ -109,7 +109,7 @@ namespace SiteParser
                     int pagesCount = _parserManagerInstance.ParserInstance.ParsedUrlsCount;
                     int totalUrlsCount = _parserManagerInstance.ParserInstance.TotalUrlsCount;
                     Stop();
-                    string text = $"Parsing finished at level: {myUpDown_Nesting_Level.Text} \n Parsed urls: {pagesCount} \n Total urls found: {totalUrlsCount} \n Time elapsed: {DateTime.Now - _startDateTime}";
+                    string text = $"Parsing finished at level: {myUpDown_Nesting_Level.Text} \n Total urls parsed: {totalUrlsCount} \n Time elapsed: {DateTime.Now - _startDateTime}";
                     string caption = $"Parsing summary info";
                     MessageBox.Show(text, caption);
                     TreeWindow treeWindow = new TreeWindow(urlComboBox.Text, _parserManagerInstance.ParserInstance.MaxNestingLevel, _parseAll);

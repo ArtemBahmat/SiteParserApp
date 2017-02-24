@@ -12,7 +12,7 @@ namespace SiteParserCore.BusinessLogic
 {
     public class TreeFileBuilder : TreeBuilderBase, ITreeBuilder
     {
-        private StringBuilder _strBuilder = new StringBuilder();
+        private readonly StringBuilder _strBuilder = new StringBuilder();
 
         public TreeFileBuilder(string baseUrl, int nestingLevel, bool getExternal) : base(baseUrl, nestingLevel, getExternal) { }
 
@@ -104,6 +104,5 @@ namespace SiteParserCore.BusinessLogic
                 url.State = State.IsAwaiting;
             }
         }
-
     }
 }

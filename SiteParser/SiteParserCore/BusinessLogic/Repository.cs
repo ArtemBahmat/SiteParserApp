@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using SqlBulkTools;
 using System.Data.SqlClient;
-using System.Data;
 using System;
 using System.Transactions;
 using SiteParserCore.Helpers;
 using SiteParserCore.Interfaces;
+using System.Configuration;
 
 namespace SiteParserCore.BusinessLogic
 {
@@ -98,7 +98,7 @@ namespace SiteParserCore.BusinessLogic
             }
         }
 
-        public void SaveSite(Site site)
+        public void SaveSite(Site site)           
         {
             try
             {
@@ -171,7 +171,7 @@ namespace SiteParserCore.BusinessLogic
             return result;
         }
 
-        public Site GetSite(string url)
+        public Site GetSite(string url)                  
         {
             Site site = null;
 
@@ -181,7 +181,7 @@ namespace SiteParserCore.BusinessLogic
                 {
                     db.Configuration.AutoDetectChangesEnabled = false;
                     db.Configuration.ValidateOnSaveEnabled = false;
-                    site = db.Sites.Where(s => s.Name == url).FirstOrDefault();
+                    site = db.Sites.FirstOrDefault(s => s.Name == url);
                 }
             }
             catch (Exception ex)
@@ -191,7 +191,7 @@ namespace SiteParserCore.BusinessLogic
             return site;
         }
 
-        public List<Site> GetSites()
+        public List<Site> GetSites()                
         {
             List<Site> sites = new List<Site>();
 
@@ -214,21 +214,7 @@ namespace SiteParserCore.BusinessLogic
 
         private string GetConnectionString()
         {
-            string connectionString = string.Empty;
-
-            try
-            {
-                using (ParserContext db = new ParserContext())
-                {
-                    connectionString = db.Database.Connection.ConnectionString;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-            }
-          
-            return connectionString;
+            return ConfigurationManager.ConnectionStrings["SpDbConnection"].ConnectionString;
         }
     }
 }

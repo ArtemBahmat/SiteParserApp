@@ -54,17 +54,17 @@ namespace SiteParserCore.Helpers
             return uri.ToString();
         }
 
-        static public string GetDomainFromUrl(string Url)
+        public static string GetDomainFromUrl(string Url)
         {
             return GetDomainFromUrl(new Uri(Url));
         }
 
-        static public string GetDomainFromUrl(Uri Url)
+        public static string GetDomainFromUrl(Uri Url)
         {
             return GetDomainFromUrl(Url, false);
         }
 
-        static public string GetDomainFromUrl(Uri Url, bool Strict)
+        public static string GetDomainFromUrl(Uri Url, bool Strict)
         {
             if (Url == null) return null;
             var dotBits = Url.Host.Split('.');

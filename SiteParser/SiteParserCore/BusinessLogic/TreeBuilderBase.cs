@@ -7,16 +7,16 @@ namespace SiteParserCore.BusinessLogic
 {
     public abstract class TreeBuilderBase : ITreeBuilder
     {
-        private IRepository _dBRepository;
+        private readonly IRepository _dBRepository;
 
-        public Url Url { get; set; }
-        public string BaseUrl { get; set; }
-        public int NestingLevel { get; set; }
-        public int SiteId { get; set; }
-        public bool GetExternal { get; set; }
-        public List<Url> Urls { get; set; }
+        protected Url Url { get; private set; }
+        protected string BaseUrl { get; }
+        private int NestingLevel { get; set; }
+        private int SiteId { get; set; }
+        private bool GetExternal { get; set; }
+        protected List<Url> Urls { get; private set; }
 
-        public TreeBuilderBase(string baseUrl, int nestingLevel, bool getExternal)
+        protected TreeBuilderBase(string baseUrl, int nestingLevel, bool getExternal)
         {
             _dBRepository = new Repository();
             BaseUrl = baseUrl;

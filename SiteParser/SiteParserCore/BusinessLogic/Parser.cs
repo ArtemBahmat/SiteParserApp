@@ -3,6 +3,7 @@ using SiteParserCore.Helpers;
 using SiteParserCore.Interfaces;
 using SiteParserCore.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -14,10 +15,11 @@ namespace SiteParserCore.BusinessLogic
     {
         private int _maxThreadCount;
         private string _baseUrl;
-        public static object _locker = new object();
-        private TaskFactory _taskFactory = new TaskFactory();
+        public static readonly object Locker = new object();
+        private readonly TaskFactory _taskFactory = new TaskFactory();
         private UrlValidator _urlValidator;
 
+        private string Domain { get; set; }
         public string BaseUrl
         {
             get
@@ -30,15 +32,17 @@ namespace SiteParserCore.BusinessLogic
                 Domain = UrlHelper.GetDomainFromUrl(_baseUrl);
             }
         }
-        public string Domain { get; set; }
         public bool IsAlive { get; set; }
         public bool ParseExternalLinks { get; set; }
         public int MaxNestingLevel { get; private set; }
         public Site Site { get; set; }
         public int TotalUrlsCount { get; private set; }
         public int ParsedUrlsCount { get; private set; }
-        public HashSet<Url> Urls { get; private set; } = new HashSet<Url>();
+        public HashSet<string> UrlNames { get; set; } = new HashSet<string>();
+        public ConcurrentQueue<Url> UrlsQueue { get; set; } = new ConcurrentQueue<Url>();
+        public ConcurrentBag<Url> ReadyUrls { get; set; } = new ConcurrentBag<Url>();
         public HashSet<Resource> Resources { get; private set; } = new HashSet<Resource>();
+        public ConcurrentBag<Resource> ReadyResources { get; set; } = new ConcurrentBag<Resource>();
         public List<Task> Tasks { get; set; } = new List<Task>();
         public HtmlWeb Web { get; set; } = new HtmlWeb();
         public int MaxThreadsCount
@@ -72,8 +76,7 @@ namespace SiteParserCore.BusinessLogic
             {
                 for (int i = 0; i < MaxThreadsCount; i++)
                 {
-                    Task task = _taskFactory.StartNew(() =>
-                              StartParse());
+                    Task task = _taskFactory.StartNew(StartParse);
                     Tasks.Add(task);
                 }
             }
@@ -87,7 +90,9 @@ namespace SiteParserCore.BusinessLogic
         {
             TotalUrlsCount = 0;
             ParsedUrlsCount = 0;
-            Urls.Clear();
+            UrlNames.Clear();
+            UrlsQueue.Clear();
+            ReadyUrls.Clear();
             Resources.Clear();
             Tasks.Clear();
             IsAlive = true;
@@ -107,26 +112,24 @@ namespace SiteParserCore.BusinessLogic
         private bool ParseUrls(bool isParent = false)
         {
             bool toContinue = true;
-            System.Diagnostics.Stopwatch sw;
-            HashSet<Url> partialUrls = new HashSet<Url>();
-            Url url = isParent ? CreateUrl(BaseUrl, State.IsInParsing, false, 0, Site.Id) : GetFirstUrlFromGlobalList();
+            Url url = GetUrl(isParent);
 
             if (url != null)
             {
                 try
                 {
-                    sw = new System.Diagnostics.Stopwatch();
+                    System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
                     HtmlDocument doc = Web.Load(url.Name);
                     sw.Stop();
                     url.ResponseTime = Math.Round(sw.Elapsed.TotalMilliseconds, 2);
                     url.HtmlSize = doc.GetHtmlSize();
                     url.DateTimeOfLastScan = DateTime.Now;
-                    url.State = State.IsParsed;
+                    ReadyUrls.Add(url);
 
                     if (url.NestingLevel < MaxNestingLevel)
                     {
-                        ProcessResources(doc, url);
+                        ProcessResources(doc, url); 
                         ProcessLinks(doc, url);
                     }
 
@@ -145,18 +148,33 @@ namespace SiteParserCore.BusinessLogic
             return toContinue;
         }
 
-        private Url CreateUrl(string name, State state, bool isExternal, int nestingLevel, int siteId)
+        private Url GetUrl(bool isParent)
+        {
+            Url url;
+
+            if (isParent)
+            {
+                url = CreateUrl(BaseUrl, false, 0, Site.Id);
+            }
+            else
+            {
+                UrlsQueue.TryDequeue(out url);
+            }
+
+            return url;
+        }
+
+        private Url CreateUrl(string name, bool isExternal, int nestingLevel, int siteId)
         {
             Url url = new Url()
             {
                 Name = name.ToLowerInvariant(),
-                State = state,
                 IsExternal = isExternal,
                 NestingLevel = nestingLevel,
                 SiteId = siteId
             };
 
-            AddUrlToList(url);
+            AddUrl(url);
             return url;
         }
 
@@ -177,9 +195,9 @@ namespace SiteParserCore.BusinessLogic
                               .Where(s => !string.IsNullOrEmpty(s))
                               .Select(srcUrl => UrlHelper.GetAbsoluteUrl(srcUrl, parentUrl.Name))
                               .Select(x => new Resource() { Name = x, ParentName = parentUrl.Name, ParentSiteId = Site.Id, Type = ResourceType.Css, State = State.IsAwaiting });
-              
 
-                AddResourcesToList(css);                
+
+                AddResourcesToList(css);
             }
             catch (Exception ex)
             {
@@ -193,57 +211,49 @@ namespace SiteParserCore.BusinessLogic
 
             if (links != null)
             {
-                string href;
-
-                foreach (var link in links)
+                foreach (HtmlNode link in links)
                 {
-                    href = link.GetAttributeValue("href", string.Empty);
+                    string href = link.GetAttributeValue("href", string.Empty);
                     Url url = new Url()
                     {
                         Name = href.ToLowerInvariant(),
-                        State = State.IsAwaiting,
                         IsExternal = !href.Contains(Domain),
                         NestingLevel = parentUrl.NestingLevel + 1,
                         SiteId = Site.Id,
                         ParentName = parentUrl.Name
                     };
 
-                    AddUrlToList(url);
+                    AddUrl(url);
                 }
             }
         }
 
-        private Url GetFirstUrlFromGlobalList()
+        private bool AddUrlName(Url url)
         {
-            lock (_locker)
+            bool success = false;
+            if (!_urlValidator.IsValid(url)) return false;
+
+            lock (Locker)
             {
-                Url url = Urls?.Where(u => u.State == State.IsAwaiting).FirstOrDefault();
+                int startCount = UrlNames.Count;
+                UrlNames.Add(url.Name);
+                int finishCount = UrlNames.Count;
 
-                if (url != null)
+                if (finishCount > startCount)
                 {
-                    url.State = State.IsInParsing;
+                    TotalUrlsCount++;
+                    success = true;
                 }
-
-                return url;
             }
+            return success;
         }
 
-        private void AddUrlToList(Url url)
+        private void AddUrl(Url url)
         {
-            if (_urlValidator.IsValid(url))
+            if (AddUrlName(url))
             {
-                lock (_locker)
-                {
-                    int startCount = Urls.Count;
-                    Urls.Add(url);
-                    int finishCount = Urls.Count;
-
-                    if (finishCount > startCount)
-                    {
-                        TotalUrlsCount++;
-                    }
-                }
-            }
+                UrlsQueue.Enqueue(url);    
+            }  
         }
 
         private void AddResourcesToList(IEnumerable<Resource> resources)
@@ -252,10 +262,12 @@ namespace SiteParserCore.BusinessLogic
 
             try
             {
-                lock (_locker)
+                var enumerable = resources as IList<Resource> ?? resources.ToList();
+                lock (Locker)
                 {
-                    Resources.UnionWith(resources);
+                    Resources.UnionWith(enumerable);
                 }
+                ReadyResources.AddRange(enumerable);
             }
             catch (Exception ex)
             {
