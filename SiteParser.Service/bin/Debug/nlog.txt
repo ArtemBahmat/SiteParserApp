@@ -1,0 +1,2 @@
+2017/02/25 21:47:45.962|Info|Service SiteParserService started
+2017/02/25 21:47:48.575|Info|START parsing site: http://www.deezer.com/ with threads: 20, max nesting level: 5, parse external links: False
