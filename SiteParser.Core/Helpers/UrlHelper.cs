@@ -7,9 +7,9 @@ namespace SiteParser.Core.Helpers
     {
         public static string GetCorrectUrl(string url)
         {
-            string http = "http://";
-            string https = "https://";
-            string slesh = "/";
+            const string http = "http://";
+            const string https = "https://";
+            const string slesh = "/";
             string result = string.Empty;
 
             if (!string.IsNullOrEmpty(url))
@@ -44,7 +44,7 @@ namespace SiteParser.Core.Helpers
         {
             baseUrl = baseUrl.EndsWith("/") ? baseUrl.Remove(baseUrl.Length - 1) : baseUrl;
 
-            var uri = new Uri(href, UriKind.RelativeOrAbsolute);
+            Uri uri = new Uri(href, UriKind.RelativeOrAbsolute);
 
             if (!uri.IsAbsoluteUri)
             {
@@ -59,23 +59,28 @@ namespace SiteParser.Core.Helpers
             return GetDomainFromUrl(new Uri(Url));
         }
 
-        public static string GetDomainFromUrl(Uri Url)
+        private static string GetDomainFromUrl(Uri url)
         {
-            return GetDomainFromUrl(Url, false);
+            return GetDomainFromUrl(url, false);
         }
 
-        public static string GetDomainFromUrl(Uri Url, bool Strict)
+        private static string GetDomainFromUrl(Uri Url, bool Strict)
         {
             if (Url == null) return null;
             var dotBits = Url.Host.Split('.');
-            if (dotBits.Length == 1) return Url.Host; //eg http://localhost/blah.php = "localhost"
-            if (dotBits.Length == 2) return Url.Host; //eg http://blah.co/blah.php = "localhost"
+            switch (dotBits.Length)
+            {
+                case 1:
+                    return Url.Host; //eg http://localhost/blah.php = "localhost"
+                case 2:
+                    return Url.Host; //eg http://blah.co/blah.php = "localhost"
+            }
             List<string> tlds = new List<string>();
             tlds.AddRange(TldPatterns.EXACT);
             tlds.AddRange(TldPatterns.UNDER);
             tlds.AddRange(TldPatterns.EXCLUDED);
             string bestMatch = "";
-            foreach (var tld in tlds)
+            foreach (string tld in tlds)
             {
                 if (Url.Host.EndsWith(tld, StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -97,9 +102,9 @@ namespace SiteParser.Core.Helpers
             return bestMatch;
         }
 
-        class TldPatterns
+        private class TldPatterns
         {
-            static public string[] EXACT = new string[] {
+            public static readonly string[] EXACT = new string[] {
       "gov.uk",
       "mil.uk",
       "ac",

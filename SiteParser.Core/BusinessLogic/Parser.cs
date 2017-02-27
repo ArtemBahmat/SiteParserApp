@@ -23,32 +23,33 @@ namespace SiteParser.Core.BusinessLogic
 
         private IRepository<ImportUrl> ImportUrlRepository { get; set; }
         private string Domain { get; set; }
-        public string BaseUrl
+
+        private string BaseUrl
         {
             get
             {
                 return _baseUrl;
             }
-            private set
+            set
             {
                 _baseUrl = value;
                 Domain = UrlHelper.GetDomainFromUrl(_baseUrl);
             }
         }
         public bool IsAlive { get; set; } = true;
-        public bool ParseExternalLinks { get; set; }
-        public int MaxNestingLevel { get; private set; }
-        public Site Site { get; set; }
+        private bool ParseExternalLinks { get; set; }
+        private int MaxNestingLevel { get; set; }
+        public Site Site { get; private set; }
         public int TotalUrlsCount { get; private set; }
         public int ParsedUrlsCount { get; private set; }
-        public HashSet<string> UrlNames { get; set; } = new HashSet<string>();
-        public ConcurrentQueue<Url> UrlsQueue { get; set; } = new ConcurrentQueue<Url>();
-        public ConcurrentBag<Url> ReadyUrls { get; set; } = new ConcurrentBag<Url>();
-        public HashSet<Resource> Resources { get; } = new HashSet<Resource>();
-        public ConcurrentBag<Resource> ReadyResources { get; set; } = new ConcurrentBag<Resource>();
-        public List<Task> Tasks { get; set; } = new List<Task>();
-        public HtmlWeb Web { get; set; } = new HtmlWeb();
-        public int MaxThreadsCount
+        private HashSet<string> UrlNames { get; } = new HashSet<string>();
+        private ConcurrentQueue<Url> UrlsQueue { get; } = new ConcurrentQueue<Url>();
+        public ConcurrentBag<Url> ReadyUrls { get; } = new ConcurrentBag<Url>();
+        private HashSet<Resource> Resources { get; } = new HashSet<Resource>();
+        public ConcurrentBag<Resource> ReadyResources { get; } = new ConcurrentBag<Resource>();
+        private List<Task> Tasks { get; set; } = new List<Task>();
+        private HtmlWeb Web { get; set; } = new HtmlWeb();
+        private int MaxThreadsCount
         {
             get
             {
@@ -94,7 +95,7 @@ namespace SiteParser.Core.BusinessLogic
             IsAlive = false;
         }
 
-        public void Reset()
+        private void Reset()
         {
             TotalUrlsCount = 0;
             ParsedUrlsCount = 0;

@@ -6,7 +6,7 @@ namespace SiteParser.Core.BusinessLogic
 {
     public class TreeViewBuilder : TreeBuilder
     {
-        public TreeView Tree { get; set; }
+        public TreeView Tree { private get; set; }
         private int _itemsCount;
 
         public override bool BuildTree()

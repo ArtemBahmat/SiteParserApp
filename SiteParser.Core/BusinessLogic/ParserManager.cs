@@ -32,10 +32,10 @@ namespace SiteParser.Core.BusinessLogic
                 ParserInstance.IsAlive = value;
             }
         }
-        public IParser ParserInstance { get; set; }
-        private IRepository<Resource> ResourceRepository { get; set; }
-        private IRepository<Url> UrlsRepository { get; set; }
-        private IRepository<Site> SitesRepository { get; set; }
+        public IParser ParserInstance { get; }
+        private IRepository<Resource> ResourceRepository { get; }
+        private IRepository<Url> UrlsRepository { get; }
+        private IRepository<Site> SitesRepository { get; }
 
         public void Execute(string url, int maxThreadsCount, int nestingLevel, bool parseExternal)
         {

@@ -8,7 +8,7 @@ namespace SiteParser.DAL.Models
         [NotMapped]
         public int Id { get; set; }
         [Key]
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         public ImportUrl() { }
 

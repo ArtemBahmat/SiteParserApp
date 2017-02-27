@@ -5,7 +5,7 @@ namespace SiteParser.Utils
 {
     public static class Log
     {
-        static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
 
         public static void Info(string message)
         {

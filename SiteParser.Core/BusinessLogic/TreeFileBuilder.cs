@@ -1,6 +1,5 @@
 ﻿using SiteParser.Core.Helpers;
 using SiteParser.Core.Interfaces;
-using SiteParser.DAL.Interfaces;
 using SiteParser.DAL.Models;
 using SiteParser.Utils;
 using System;

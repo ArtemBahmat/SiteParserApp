@@ -13,7 +13,7 @@ namespace SiteParser.Core.Repository
         {
             using (ParserContext db = new ParserContext())
             {
-                _tableName = db.GetTableName<Url>();
+                _tableName = db.GetTableName<Resource>();
             }
         }
 

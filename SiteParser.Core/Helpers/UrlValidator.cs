@@ -7,7 +7,7 @@ namespace SiteParser.Core.Helpers
 {
     public class UrlValidator
     {
-        static readonly HashSet<string> FileTypes = new HashSet<string> { ".exe", ".djvu", ".pdf", ".zip", ".rar", ".tar", ".arj", ".arc", ".lzh", ".gz", ".z", ".tar", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".js", ".css", ".cs", ".config", ".ico", ".jpg", ".jpe", ".gif", ".xbm", ".jpeg", ".bmp", ".png", ".mp3", ".wav", ".mid", ".au", ".aif", ".ra", ".ram", ".wma", ".avi", ".mov", ".mpg", ".mpe", ".mpeg", ".asf", ".mp4", ".asx", ".wmv", ".swf" };
+        private static readonly HashSet<string> FileTypes = new HashSet<string> { ".exe", ".djvu", ".pdf", ".zip", ".rar", ".tar", ".arj", ".arc", ".lzh", ".gz", ".z", ".tar", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".js", ".css", ".cs", ".config", ".ico", ".jpg", ".jpe", ".gif", ".xbm", ".jpeg", ".bmp", ".png", ".mp3", ".wav", ".mid", ".au", ".aif", ".ra", ".ram", ".wma", ".avi", ".mov", ".mpg", ".mpe", ".mpeg", ".asf", ".mp4", ".asx", ".wmv", ".swf" };
         private readonly string _baseUrl;
         private readonly string _domain;
         private readonly bool _parseExternalLinks;
