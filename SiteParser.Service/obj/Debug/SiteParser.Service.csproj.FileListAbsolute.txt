@@ -1,0 +1,3 @@
+D:\Artem_C#\_MedeAnalytics_\SiteParserApp\SiteParser.Service\bin\Debug\EntityFramework.dll
+D:\Artem_C#\_MedeAnalytics_\SiteParserApp\SiteParser.Service\bin\Debug\EntityFramework.Extended.dll
+D:\Artem_C#\_MedeAnalytics_\SiteParserApp\SiteParser.Service\bin\Debug\HtmlAgilityPack.pdb

@@ -17127,3 +17127,12 @@ ImportUrls: EntityType: EntitySet 'ImportUrls' is based on type 'ImportUrl' that
 2017/02/27 01:22:29.084|Error|An error occurred while updating the entries. See the inner exception for details.
 2017/02/27 01:22:29.198|Error|An error occurred while updating the entries. See the inner exception for details.
 2017/02/27 01:22:29.297|Error|An error occurred while updating the entries. See the inner exception for details.
+2017/02/27 03:02:27.475|Error|Invalid column name 'ParentSiteId'.
+2017/02/27 03:02:29.866|Error|An error occurred while updating the entries. See the inner exception for details.
+2017/02/27 03:02:30.185|Error|”казанное ColumnMapping не соответствует ни одному столбцу в источнике данных или в пункте назначени€.
+2017/02/27 03:02:30.324|Error|An error occurred while updating the entries. See the inner exception for details.
+2017/02/27 03:02:30.447|Error|An error occurred while updating the entries. See the inner exception for details.
+2017/02/27 03:02:30.510|Error|An error occurred while updating the entries. See the inner exception for details.
+2017/02/27 03:02:30.640|Error|An error occurred while updating the entries. See the inner exception for details.
+2017/02/27 03:02:30.831|Error|An error occurred while updating the entries. See the inner exception for details.
+2017/02/27 03:02:31.422|Error|”казанное ColumnMapping не соответствует ни одному столбцу в источнике данных или в пункте назначени€.
